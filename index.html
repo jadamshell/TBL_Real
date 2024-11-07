@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>TBL_REal</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMP Selection Tool</title>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+<style>
+ body, h1, button, fieldset legend {
+  font-family: 'Open Sans', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #F0F4FA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  background-color: #0033A0;
+  color: white;
+  padding: 10px 40px;
+  width: 100%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 60px;
+  margin-right: 20px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.logo img {
+  height: 100%;
+}
+
+h1 {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  flex-grow: 1;
+}
+
+.content {
+  display: flex;
+  width: 95%;
+  max-width: 1800px;
+  margin-top: 20px;
+  align-items: flex-start;
+}
+
+.filter-section {
+  width: 300px;
+  background-color: white;
+  padding: 20px;
+  margin-right: 20px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldset {
+  margin-bottom: 10px;
+  border: none;
+}
+
+.legend {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.filter-section label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.filter-section input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+#apply-filters-btn {
+  background-color: #0033A0;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background 0.3s ease;
+}
+
+#apply-filters-btn:hover {
+  background-color: #002266;
+}
+
+.bmp-card h3 {
+  font-size: 16px;
+  margin: 40px 0 10px;
+}
+
+.bmp-cards-container {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: space-around;
+  align-content: flex-start;
+  overflow-y: auto;
+  max-height: calc(100vh - 200px);
+}
+
+.rank {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background-color: rgba(0, 51, 160, 0.7);
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.bmp-card {
+  position: relative;
+  width: 22%;
+  height: 375px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.bmp-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.bmp-card p {
+  margin-top: auto;
+}
+
+.bmp-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 50%;
+  border-radius: 8px;
+}
+
+.modal-content img {
+    width: 100%;  /* ensures the image is responsive and fits the width of its container */
+    max-height: 400px; /* limits the height of the image */
+    object-fit: cover; /* ensures the image covers the available space without distorting aspect ratio */
+}
+  
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sorting-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.score-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.score-buttons button {
+  background-color: #0033a0;
+  color: white;
+  border: 2px solid #0033a0;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.score-buttons button:hover {
+  background-color: #002266;
+}
+
+.score-buttons button.active {
+  background-color: #4d79ff;
+  border: 2px inset #4d79ff;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.type-label {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(0, 51, 160, 0.7);
+  color: white;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 5px;
+}
+
+.intro {
+  width: 80%;
+  max-width: 1200px;
+  margin: 20px auto;
+  text-align: justify;
+  line-height: 1.6;
+}
+
+footer {
+  width: 100%;
+  background-color: #0033A0;
+  padding: 20px;
+  text-align: center;
+  line-height: 1.6;
+  font-size: 14px;
+  margin-top: 20px;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.footer-content {
+  width: 80%;
+  max-width: 1000px;
+  text-align: justify;
+}
+
+.scores-help-icon {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.scores-help-icon img {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.help-popup {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.help-popup-content {
+  margin: 15% auto;
+  display: block;
+  width: 80%;
+  max-width: 1200px;
+}
+
+.help-popup-close {
+  color: #fff;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comparison-popup {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.comparison-popup-content {
+  background-color: #fefefe;
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 800px;
+  border-radius: 8px;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.comparison-table th {
+  background-color: #f2f2f2;
+}
+
+.comparison-charts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.comparison-charts canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+.help-button-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.help-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.help-button img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  animation: jiggle 1s ease-in-out infinite;
+}
+
+.help-text {
+  font-size: 14px;
+  color: white;
+  animation: flash 2s ease-in-out infinite;
+}
+
+@keyframes jiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+  
+</style>
+</head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.0.2/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.1.0/introjs.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intro.js/5.1.0/intro.min.js"></script>
+  
+<body>
+
+<body>
+<div class="header">
+  <div class="logo">
+    <img src="https://i.imgur.com/aMjbq9z.png" alt="Logo">
+  </div>
+  <h1>TRIPLE BOTTOM LINE - BMP SELECTION TOOL</h1>
+<div class="help-button-container">
+  <div class="help-text">Click the question mark to tour the app</div>
+  <div class="help-button" onclick="startWalkthrough()">
+    <img src="https://i.imgur.com/vKJnyRN.png" alt="Help" title="Start Walkthrough">
+  </div>
+</div>
+</div>
+  
+  <div class="intro">
+    The Triple Bottom Line BMP Selector is designed to help users select Best Management Practices (BMPs) by evaluating potential options across three core dimensions: Environmental, Economic, and Social factors. The Triple-Bottom Line Analysis, a scoring system that quantifies the effectiveness of a BMP in these three areas. The website interface built around this tool features interactive elements like checkboxes and sorting options that allow users to filter BMPs based on their preferences. It dynamically generates cards for each BMP with a ranking and a triple-bottom line score. Clicking on a card creates a popup with more detailed information, including descriptions, outcomes, images, and charts illustrating the BMP's performance across the analyzed factors.
+  </div>
+
+ 
+  <div class="content">
+  <div class="filter-section">
+    <!-- Visibility filter for Type -->
+    <fieldset class="type-filters">
+      <legend>Type</legend>
+      <label><input type="checkbox" class="filter type" value="Urban"> Urban</label>
+      <label><input type="checkbox" class="filter type" value="Stream"> Stream</label>
+      <label><input type="checkbox" class="filter type" value="Rural"> Rural</label>
+    </fieldset>
+    
+    <!-- Checkbox filters for Environmental factors -->
+    <fieldset class="environmental-filters">
+      <legend>Environmental</legend>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="EColi"> E. Coli</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="Nitrogen"> Nitrogen</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="Phosphorus"> Phosphorus</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="Sediment"> Sediment</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="DissolvedSolids"> Dissolved Solids</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="TrashDebris"> Trash / Debris</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="PeakFlowReduction"> Peak Flow and Volume Reduction</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="RiparianHabitat"> Riparian Habitat</label>
+      <label><input type="checkbox" class="filter environmental" data-category="pollutantEfficiency" value="BankChannelHabitat"> Bank / Channel Habitat</label>
+    </fieldset>
+<div id="sorting-options" class="sorting-section">
+  <!-- Sorting options will go here -->
+</div>
+
+    <!-- Sorting options, including dropdown and toggle switch -->
+    <div class="sorting-section">
+      <label for="sort-by-select">Sort by (Best to Worst):</label>
+      <select id="sort-by-select">
+        <!-- Sorting options will be dynamically added here -->
+      </select>
+    </div>
+    
+ <div class="help-and-compare">
+  <div class="scores-help-icon">
+    <img src="https://i.imgur.com/9yskgih.png" alt="Help" title="Help interpreting scores">
+  </div>
+  <button id="compare-btn" style="background-color: #0033A0; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 20px; width: 100%; box-sizing: border-box; transition: background 0.3s ease;">Compare Selection</button>
+</div>
+  </div>
+
+  <div class="bmp-cards-container" id="bmp-cards">
+    <!-- Cards will be dynamically generated and appended here -->
+  </div>
+</div>
+
+<div id="bmp-modal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="modal-content-body">
+      <!-- Dynamic content including charts will be added here by JavaScript -->
+    </div>
+  </div>
+</div>
+
+<div id="help-popup" class="help-popup">
+  <span class="help-popup-close">&times;</span>
+  <img class="help-popup-content" src="https://i.imgur.com/aQCE58U.png" alt="Help Interpreting Scores">
+</div>
+
+<!-- Add a popup for displaying the comparison -->
+<div id="comparison-popup" class="comparison-popup">
+  <div class="comparison-popup-content">
+    <span class="close">&times;</span>
+    <h3>BMP Comparison</h3>
+    <table id="comparison-table" class="comparison-table">
+      <!-- Table headers and rows will be dynamically populated -->
+    </table>
+    <div id="comparison-charts" class="comparison-charts">
+      <!-- Canvas elements for the graphs will be dynamically added -->
+    </div>
+  </div>
+</div>
+
+<div class="filter-section" data-intro="You can filter BMPs by type and pollutant of concern using these checkboxes." data-step="1">
+  <!-- Filter section content -->
+</div>
+<div class="bmp-cards-container" data-intro="The filtered BMPs will be displayed here, ranked from highest to lowest effectiveness." data-step="3">
+  <!-- BMP cards container content -->
+</div>
+  
+<footer>
+    <div class="footer-content">
+      Funding for this project was provided in part by a grant from the U.S. Environmental Protection Agency (USEPA) through the Kentucky Division of Water, Nonpoint Source Section, to KWRI as authorized by the Clean Water Act Amendments of 1987, §319(h) Nonpoint Source Implementation Grant #PON2-129-2200000339.
+    </div>
+  </footer>
+</body>
+<script>
+// Define bmpData globally to store the data fetched from the CSV
+let bmpData = [];
+let filteredData = []; // Store filtered BMP data globally for sorting
+
+// Fetch BMP Data from a CSV file
+async function fetchBmpData() {
+    const googleSheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRcxB8rHMigDn0MvkBI42-Uk6MK7DNzETsA_6KT5NL0Hv_40kx8faAZPo0GfFL3f83IR8GJ6_tv3uC4/pub?output=csv';
+    try {
+        const response = await fetch(googleSheetURL);
+        const csvText = await response.text();
+        bmpData = Papa.parse(csvText, { header: true, skipEmptyLines: true }).data;
+        filteredData = [...bmpData]; // Create a copy of the full dataset
+        populateBmpCards(bmpData);
+        return bmpData;
+    } catch (error) {
+        console.error('Error loading BMP data:', error);
+        return [];
+    }
+}
+
+function createBmpCard(bmp, rank, totalBmps) {
+    // Check for necessary data
+    if (!bmp || !bmp.Title || !bmp.ImageSrc || isNaN(parseFloat(bmp.TripleBottomLineScore))) {
+        console.error('Invalid BMP data', bmp);
+        return document.createElement('div'); // Return an empty div in case of invalid BMP data
+    }
+
+    const card = document.createElement('div');
+  card.className = 'bmp-card';
+  card.innerHTML = `
+    <div class="rank">${rank} of ${totalBmps}</div>
+    <div class="type-label">${bmp.Type}</div>
+    <h3>${bmp.Title.trim()}</h3>
+    <img src="${bmp.ImageSrc.trim()}" alt="Image of ${bmp.Title.trim()}" style="width:100%;">
+    <p>Triple Bottom Line Score: ${parseFloat(bmp.TripleBottomLineScore).toFixed(0)}</p>
+ <label><input type="checkbox" class="bmp-checkbox" data-bmp-title="${bmp.Title.trim()}"> Select for Comparison</label> `;
+
+  card.addEventListener('click', (event) => {
+        // Prevent modal from opening when the checkbox is clicked
+        if (event.target.type !== 'checkbox') {
+            populateAndShowModal(bmp);
+        }
+    });
+    return card;
+}
+
+function populateAndShowModal(bmp) {
+    // Reference to the modal body
+    const modalBody = document.getElementById('modal-content-body');
+    
+    // Clear existing content
+    modalBody.innerHTML = '';
+    
+    // Create and append the title section
+    const titleSection = document.createElement('div');
+    const title = document.createElement('h3');
+    title.textContent = bmp.Title;
+    const titleLine = document.createElement('hr');
+    titleSection.appendChild(title);
+    titleSection.appendChild(titleLine);
+    modalBody.appendChild(titleSection);
+
+    // Create and append the description and outcome section
+    const descriptionSection = document.createElement('div');
+    const description = document.createElement('p');
+    description.innerHTML = `<strong>Description:</strong> ${bmp.Description}`;
+    const outcome = document.createElement('p');
+    outcome.innerHTML = `<strong>Outcome:</strong> ${bmp.Outcome}`;
+    descriptionSection.appendChild(description);
+    descriptionSection.appendChild(outcome);
+    modalBody.appendChild(descriptionSection);
+
+    // Create and append the image
+    const image = document.createElement('img');
+    image.src = bmp.ImageSrc.trim();
+    image.alt = `Image of ${bmp.Title.trim()}`;
+    image.style.width = '100%';
+    image.style.marginTop = '20px';
+    image.style.marginBottom = '20px';
+    modalBody.appendChild(image);
+
+    // Create and append the BMP Factor Scores section
+    const scoresSection = document.createElement('div');
+    const scoresHeading = document.createElement('h4');
+    scoresHeading.textContent = 'BMP Factor Scores';
+    const scoresLine = document.createElement('hr');
+    scoresSection.appendChild(scoresHeading);
+    scoresSection.appendChild(scoresLine);
+    modalBody.appendChild(scoresSection);
+
+    // Create and append the canvas elements for charts
+    const canvas1 = document.createElement('canvas');
+    canvas1.id = 'bmpChart';
+    const canvas2 = document.createElement('canvas');
+    canvas2.id = 'aggregatedScoresChart';
+    scoresSection.appendChild(canvas1);
+    scoresSection.appendChild(canvas2);
+
+    // Append scoresSection after creating canvases
+    modalBody.appendChild(scoresSection);
+
+    // Create and append the Related Links section
+    const linksSection = document.createElement('div');
+    const linksHeading = document.createElement('h4');
+    linksHeading.textContent = 'Related Links';
+    const linksLine = document.createElement('hr');
+    linksSection.appendChild(linksHeading);
+    linksSection.appendChild(linksLine);
+
+    // Handle all possible related links (1 through 10)
+    for (let i = 1; i <= 10; i++) {
+        const textKey = i === 1 ? 'RelatedLinkText' : `RelatedLinkText${i}`;
+        const urlKey = i === 1 ? 'RelatedLinkUrl' : `RelatedLinkUrl${i}`;
+        
+        if (bmp[textKey] && bmp[urlKey] && bmp[textKey].trim() && bmp[urlKey].trim()) {
+            const linkText = bmp[textKey].trim();
+            const url = bmp[urlKey].trim();
+            
+            // Create link container
+            const linkContainer = document.createElement('div');
+            linkContainer.style.marginBottom = '10px';
+            
+            // Create and configure link element
+            const link = document.createElement('a');
+            link.href = url;
+            link.textContent = linkText;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            
+            // Add styling
+            link.style.color = '#0366d6';
+            link.style.textDecoration = 'none';
+            link.style.display = 'block';
+            link.style.marginBottom = '8px';
+            
+            // Add hover effect
+            link.addEventListener('mouseover', () => {
+                link.style.textDecoration = 'underline';
+            });
+            link.addEventListener('mouseout', () => {
+                link.style.textDecoration = 'none';
+            });
+
+            linkContainer.appendChild(link);
+            linksSection.appendChild(linkContainer);
+        }
+    }
+
+    modalBody.appendChild(linksSection);
+
+    // Display the modal
+    const modal = document.getElementById('bmp-modal');
+    modal.style.display = 'block';
+
+    // Draw charts on the newly created canvas elements
+    // Use setTimeout to ensure the DOM has updated and the canvas elements are fully ready
+    setTimeout(() => {
+        drawBarChart(bmp, 'bmpChart');
+        drawAggregatedScoresChart(bmp, 'aggregatedScoresChart');
+    }, 0);
+}
+
+// Colors for each category
+const environmentalColor = 'rgba(75, 192, 192, 0.2)'; // Example: Green
+const economicColor = 'rgba(255, 206, 86, 0.2)'; // Example: Yellow
+const socialColor = 'rgba(54, 162, 235, 0.2)'; // Example: Blue
+const tripleBottomLineColor = 'rgba(153, 102, 255, 0.2)'; // Example: Purple
+  
+// Get the "Compare Selection" button and add a click event listener
+const compareBtn = document.getElementById('compare-btn');
+compareBtn.addEventListener('click', compareSelectedBMPs);
+
+function compareSelectedBMPs() {
+    const selectedCheckboxes = document.querySelectorAll('.bmp-checkbox:checked');
+    
+    if (selectedCheckboxes.length !== 2) {
+        alert('Please select exactly two BMPs to compare.');
+        return;
+    }
+    
+    const bmpTitles = Array.from(selectedCheckboxes).map(checkbox => checkbox.getAttribute('data-bmp-title'));
+    const selectedBMPs = bmpData.filter(bmp => bmpTitles.includes(bmp.Title));
+    
+    const comparisonPopup = document.getElementById('comparison-popup');
+    const comparisonTable = document.getElementById('comparison-table');
+    const comparisonCharts = document.getElementById('comparison-charts');
+    
+    // Clear existing content
+    comparisonTable.innerHTML = '';
+    comparisonCharts.innerHTML = '';
+  
+    // Create table headers
+    const headerRow = comparisonTable.insertRow();
+    const factorHeader = headerRow.insertCell();
+    const bmpHeader1 = headerRow.insertCell();
+    const bmpHeader2 = headerRow.insertCell();
+    factorHeader.textContent = 'Factor';
+    bmpHeader1.textContent = selectedBMPs[0].Title;
+    bmpHeader2.textContent = selectedBMPs[1].Title;
+
+    // Define a mapping from friendly names to data keys
+    const factorKeyMap = {
+        'E. Coli': 'EColi',
+        'Nitrogen': 'Nitrogen',
+        'Phosphorus': 'Phosphorus',
+        'Sediment': 'Sediment',
+        'Dissolved Solids': 'DissolvedSolids',
+        'Trash/Debris': 'TrashDebris',
+        'Peak Flow Reduction': 'PeakFlowReduction',
+        'Riparian Habitat': 'RiparianHabitat',
+        'Bank/Channel Habitat': 'BankChannelHabitat',
+        'Capital Cost': 'CapitalCost',
+        'Maintenance Cost': 'MaintenanceCost',
+        'Regulatory Constrictions': 'RegulatoryConstrictions',
+        'Technical Level': 'TechnicalLevel',
+        'Nuisance/Negative Impacts': 'NuisanceOrNegativeImpacts',
+        'Attractiveness/Added Benefits': 'AttractivenessAddedBenefits'
+    };
+
+    // Populate table rows with BMP values using the map for key access
+    Object.entries(factorKeyMap).forEach(([friendlyName, key]) => {
+        const row = comparisonTable.insertRow();
+        const factorCell = row.insertCell();
+        const bmpCell1 = row.insertCell();
+        const bmpCell2 = row.insertCell();
+        
+        factorCell.textContent = friendlyName;
+        bmpCell1.textContent = selectedBMPs[0][key] || 'N/A'; // Use 'N/A' if undefined
+        bmpCell2.textContent = selectedBMPs[1][key] || 'N/A';
+    });
+
+    // Create unique IDs for the canvas elements
+const canvasId1 = `comparisonChart1`;
+const canvasId2 = `comparisonChart2`;
+const aggregatedCanvasId1 = `aggregatedComparisonChart1`;
+const aggregatedCanvasId2 = `aggregatedComparisonChart2`;
+
+// Create canvas elements for the graphs
+const canvas1 = document.createElement('canvas');
+canvas1.id = canvasId1;
+const canvas2 = document.createElement('canvas');
+canvas2.id = canvasId2;
+const aggregatedCanvas1 = document.createElement('canvas');
+aggregatedCanvas1.id = aggregatedCanvasId1;
+const aggregatedCanvas2 = document.createElement('canvas');
+aggregatedCanvas2.id = aggregatedCanvasId2;
+
+comparisonCharts.appendChild(canvas1);
+comparisonCharts.appendChild(canvas2);
+comparisonCharts.appendChild(aggregatedCanvas1);
+comparisonCharts.appendChild(aggregatedCanvas2);
+
+// Ensure canvas elements are added to the DOM before drawing
+setTimeout(() => {
+    drawBarChart(selectedBMPs[0], canvasId1);
+    drawBarChart(selectedBMPs[1], canvasId2);
+    drawAggregatedScoresChart(selectedBMPs[0], aggregatedCanvasId1);
+    drawAggregatedScoresChart(selectedBMPs[1], aggregatedCanvasId2);
+}, 0);
+  
+    // Display the comparison popup
+    comparisonPopup.style.display = 'block';
+}
+  
+function drawBarChart(bmp, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.error(`Canvas not found: ${canvasId}`);
+        return;
+    }
+    const ctx = canvas.getContext('2d');
+    const backgroundColors = [
+        environmentalColor, environmentalColor, environmentalColor, environmentalColor, environmentalColor, environmentalColor, environmentalColor, environmentalColor, environmentalColor, // Environmental factors
+        economicColor, economicColor, // Economic factors
+        socialColor, socialColor, socialColor, socialColor // Social factors
+    ];
+    const borderColor = backgroundColors.map(color => color.replace('0.2', '1')); // Make border color slightly darker than background
+
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['E. Coli', 'Nitrogen', 'Phosphorus', 'Sediment', 'Dissolved Solids', 'Trash/Debris', 'Peak Flow Reduction', 'Riparian Habitat', 'Bank/Channel Habitat', 'Capital Cost', 'Maintenance Cost', 'Regulatory Constraints', 'Technical Level', 'Nuisance/Negative Impacts', 'Attractiveness/Added Benefits'],
+            datasets: [{
+                label: 'Score',
+                data: [bmp.EColi, bmp.Nitrogen, bmp.Phosphorus, bmp.Sediment, bmp.DissolvedSolids, bmp.TrashDebris, bmp.PeakFlowReduction, bmp.RiparianHabitat, bmp.BankChannelHabitat, bmp.CapitalCost, bmp.MaintenanceCost, bmp.RegulatoryConstrictions, bmp.TechnicalLevel, bmp.NuisanceNegativeImpacts, bmp.AttractivenessAddedBenefits],
+                backgroundColor: backgroundColors,
+                borderColor: borderColor,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 5.5
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            const value = context.parsed.y;
+                            const index = context.dataIndex;
+                            let description = '';
+
+                            if (index <= 4) {
+                                // E.coli, Nitrogen, Phosphorus, Sediment, Dissolved Solids
+                                if (value === 1) description = 'Very Low (<10%)';
+                                else if (value === 2) description = 'Low (10-24.9%)';
+                                else if (value === 3) description = 'Moderate (25-39.9%)';
+                                else if (value === 4) description = 'High (40-60%)';
+                                else if (value === 5) description = 'Very High (>60%)';
+                            } else if (index >= 5 && index <= 8) {
+                                // Trash/Debris, Peak Flow and Volume Reduction, Riparian Habitat, Bank/Channel Habitat
+                                if (value === 1) description = 'Very Low';
+                                else if (value === 2) description = 'Low';
+                                else if (value === 3) description = 'Moderate';
+                                else if (value === 4) description = 'High';
+                                else if (value === 5) description = 'Very High';
+                            } else if (index === 9) {
+                                // Capital Cost
+                                if (value === 1) description = '$10,000 -99,999';
+                                else if (value === 2) description = '$1,000-9,999';
+                                else if (value === 3) description = '$100-999';
+                                else if (value === 4) description = '$10-99';
+                                else if (value === 5) description = '$≤10';
+                            } else if (index === 10) {
+                                // Maintenance Cost
+                                if (value === 1) description = '≥$10,000';
+                                else if (value === 2) description = '$1,000-9,999';
+                                else if (value === 3) description = '$100-999';
+                                else if (value === 4) description = '$10-99';
+                                else if (value === 5) description = '$≤10';
+                            } else if (index >= 11 && index <= 13) {
+                                // Regulatory Constraints, Technical Level, Nuisance or Negative Impacts
+                                if (value === 1) description = 'Moderate';
+                                else if (value === 2) description = 'Minor';
+                                else if (value === 3) description = 'None';
+                            } else if (index === 14) {
+                                // Attractiveness or Added Benefits
+                                if (value === 1) description = 'Neutral/Not Visible';
+                                else if (value === 2) description = 'Attractive';
+                                else if (value === 3) description = 'Very Attractive';
+                            }
+
+                            return label + value + (description ? ` (${description})` : '');
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+function drawAggregatedScoresChart(bmp, canvasId) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.error(`Canvas not found: ${canvasId}`);
+        return;
+    }
+    const ctx = canvas.getContext('2d');
+    const backgroundColorsAggregated = [
+        environmentalColor, // Environmental score
+        economicColor, // Economic score
+        socialColor, // Social score
+        tripleBottomLineColor // Triple Bottom Line score
+    ];
+    const borderColorAggregated = backgroundColorsAggregated.map(color => color.replace('0.2', '1'));
+
+    const aggregatedChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Environmental', 'Economic', 'Social', 'Triple Bottom Line'],
+            datasets: [{
+                label: 'Scores',
+                data: [bmp.EnvironmentalScore, bmp.EconomicScore, bmp.SocialScore, bmp.TripleBottomLineScore],
+                backgroundColor: backgroundColorsAggregated,
+                borderColor: borderColorAggregated,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+  
+// Function to display BMP cards in the UI
+function populateBmpCards(bmpList) {
+  const container = document.getElementById('bmp-cards');
+  container.innerHTML = ''; // Clear existing cards
+  bmpList.forEach((bmp, index) => {
+    container.appendChild(createBmpCard(bmp, index + 1, bmpList.length));
+  });
+}
+
+function setupTypeFilters() {
+  const typeCheckboxes = document.querySelectorAll('.filter.type');
+  typeCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', applyFilters);
+  });
+}
+
+function setupEnvironmentalFilters() {
+  const environmentalCheckboxes = document.querySelectorAll('.filter.environmental');
+  environmentalCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        environmentalCheckboxes.forEach(box => {
+          if (box !== this) box.checked = false;
+        });
+      }
+      applyFilters();
+    });
+  });
+}
+
+// Remove the showSortingOptions() function call from applyFilters()
+function applyFilters() {
+  const selectedTypes = Array.from(document.querySelectorAll('.filter.type:checked')).map(checkbox => checkbox.value);
+  const selectedEnvironmentalFilter = document.querySelector('.filter.environmental:checked');
+
+  if (selectedTypes.length === 0 && !selectedEnvironmentalFilter) {
+    filteredData = bmpData; // Update filteredData to all BMPs if no filters are applied
+  } else {
+    filteredData = bmpData; // Start with all BMPs
+
+    if (selectedTypes.length > 0) {
+      filteredData = filteredData.filter(bmp => selectedTypes.includes(bmp.Type));
+    }
+
+    if (selectedEnvironmentalFilter) {
+      const parameter = selectedEnvironmentalFilter.value;
+      filteredData = filteredData.filter(bmp => parseFloat(bmp[parameter]) > 0)
+                                 .sort((a, b) => parseFloat(b[parameter]) - parseFloat(a[parameter]));
+    }
+  }
+  
+  // Apply any existing sort
+  const sortBySelect = document.getElementById('sort-by-select');
+  if (sortBySelect && sortBySelect.value) {
+    sortFilteredData(sortBySelect.value);
+  } else {
+    populateBmpCards(filteredData);
+  }
+}
+
+// Function to dynamically display sorting options
+function showSortingOptions() {
+    const sortBySelect = document.getElementById('sort-by-select');
+    if (!sortBySelect) return;
+    sortBySelect.innerHTML = ''; // Clear existing sorting options
+
+    // Populate sorting options
+    const sortingOptions = [
+        { text: 'Environmental Score', value: 'EnvironmentalScore' },
+        { text: 'Economic Score', value: 'EconomicScore' },
+        { text: 'Social Score', value: 'SocialScore' },
+        { text: 'Triple Bottom Line Score', value: 'TripleBottomLineScore' }
+    ];
+
+    sortingOptions.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.text;
+        sortBySelect.appendChild(optionElement);
+    });
+
+    // Add event listener for sorting
+    sortBySelect.addEventListener('change', applySorting);
+
+    // Make sorting options section visible
+    const sortingContainer = document.getElementById('sorting-options');
+    sortingContainer.style.display = 'block';
+}
+
+
+// Apply sorting based on the selected parameter and the order (ascending/descending)
+function applySorting() {
+  const sortBySelect = document.getElementById('sort-by-select');
+  const sortParameter = sortBySelect.value;
+  
+  // If no filtered data exists, use the full dataset
+  if (!filteredData || filteredData.length === 0) {
+    filteredData = [...bmpData];
+  }
+  
+  sortFilteredData(sortParameter);
+}
+
+// Update sortFilteredData to handle empty/undefined cases
+function sortFilteredData(sortParameter) {
+    if (!filteredData || filteredData.length === 0) {
+        filteredData = [...bmpData];
+    }
+    
+    filteredData = filteredData
+        .filter(bmp => bmp[sortParameter] !== undefined && bmp[sortParameter] !== null)
+        .sort((a, b) => parseFloat(b[sortParameter]) - parseFloat(a[sortParameter]));
+    
+    populateBmpCards(filteredData);
+}
+
+
+function startWalkthrough() {
+  const intro = introJs();
+
+  intro.setOptions({
+    steps: [
+      {
+        element: '.filter-section',
+        intro: 'You can filter BMPs by type and pollutant of concern using these checkboxes. First, let\'s filter the BMPs by setting. Click on the "Rural" checkbox.',
+        position: 'right'
+      },
+      {
+        element: '.bmp-cards-container',
+        intro: 'Now all the BMPs that are most effective in a rural setting are shown.',
+        position: 'top'
+      },
+      {
+        element: '.environmental-filters',
+        intro: 'Next, let\'s filter the BMPs by pollutant of concern. Click on the "E. Coli" checkbox.',
+        position: 'right'
+      },
+      {
+        element: '.bmp-cards-container',
+        intro: 'The BMPs are now filtered to those that have the greatest reduction in E. Coli and ranked from highest to lowest effectiveness.',
+        position: 'top'
+      },
+      {
+        element: '.sorting-section',
+        intro: 'Let\'s sort our Rural BMPs that reduce E. Coli based on cost. Select "Capital Cost" from the dropdown.',
+        position: 'right'
+      },
+      {
+        element: '.bmp-cards-container',
+        intro: 'Now the Rural BMPs are ranked from best to worst based on E. Coli reduction and Capital Cost.',
+        position: 'top'
+      },
+      {
+        element: '.scores-help-icon',
+        intro: 'Before we explore our BMPs, let\'s learn more about how the individual factors and Triple Bottom Line score are calculated. To learn more, you would click on the "Help Interpreting Scores" icon. Click next to proceed.',
+        position: 'left'
+      },
+      {
+        element: '.bmp-cards-container',
+        intro: 'To learn more about our BMPs, you would click on a card. Click next to proceed.',
+        position: 'top'
+      },
+      {
+        element: '.bmp-cards-container',
+        intro: 'To compare the BMP scores, select two BMPs and click the "Compare Selection" button. Click next to proceed.',
+        position: 'top'
+      },
+      {
+        element: '.help-button',
+        intro: 'If you want to revisit the tour again, just click on the question mark at the top of the page.',
+        position: 'right'
+      }
+    ],
+    showBullets: false,
+    showProgress: true,
+    exitOnOverlayClick: false
+  });
+
+  intro.onbeforechange(function(targetElement) {
+    if (targetElement.classList.contains('filter-section')) {
+      const ruralCheckbox = document.querySelector('.filter.type[value="Rural"]');
+      ruralCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          intro.nextStep();
+        }
+      });
+    } else if (targetElement.classList.contains('environmental-filters')) {
+      const ecoliCheckbox = document.querySelector('.filter.environmental[value="EColi"]');
+      ecoliCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+          intro.nextStep();
+        }
+      });
+    } else if (targetElement.classList.contains('sorting-section')) {
+      const sortBySelect = document.getElementById('sort-by-select');
+      sortBySelect.addEventListener('change', function() {
+        if (this.value === 'CapitalCost') {
+          intro.nextStep();
+        }
+      });
+    } else if (targetElement.classList.contains('scores-help-icon')) {
+      const scoresHelpIcon = document.querySelector('.scores-help-icon');
+      scoresHelpIcon.style.pointerEvents = 'none'; // Disable click events on the icon
+    } else if (targetElement.classList.contains('bmp-cards-container')) {
+      const bmpCards = document.querySelectorAll('.bmp-card');
+      bmpCards.forEach(function(card) {
+        card.style.pointerEvents = 'none'; // Disable click events on the BMP cards
+      });
+    }
+  });
+
+  intro.onafterchange(function(targetElement) {
+    if (targetElement.getAttribute('id') === 'compare-btn') {
+      const selectedCheckboxes = document.querySelectorAll('.bmp-checkbox:checked');
+      if (selectedCheckboxes.length === 2) {
+        compareSelectedBMPs();
+        intro.nextStep();
+      }
+    } else if (targetElement.classList.contains('comparison-popup-content')) {
+      window.addEventListener('click', handleOutsideComparisonPopupClick);
+    } else if (targetElement.classList.contains('help-button')) {
+      const scoresHelpIcon = document.querySelector('.scores-help-icon');
+      scoresHelpIcon.style.pointerEvents = 'auto'; // Re-enable click events on the icon
+      const bmpCards = document.querySelectorAll('.bmp-card');
+      bmpCards.forEach(function(card) {
+        card.style.pointerEvents = 'auto'; // Re-enable click events on the BMP cards
+      });
+    }
+  });
+
+  function handleOutsideComparisonPopupClick(event) {
+    if (!event.target.closest('.comparison-popup-content')) {
+      document.getElementById('comparison-popup').style.display = 'none';
+      window.removeEventListener('click', handleOutsideComparisonPopupClick);
+      intro.exit();
+    }
+  }
+
+  intro.start();
+}
+
+function getBmpDataFromCard(card) {
+  const title = card.querySelector('h3').textContent;
+  return bmpData.find(bmp => bmp.Title.trim() === title);
+}
+    
+  
+// DOMContentLoaded event to ensure the script runs after the entire page is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  fetchBmpData().then(() => {
+    // Initialize filteredData with the full dataset
+    filteredData = [...bmpData];
+    
+    const sortBySelect = document.getElementById('sort-by-select');
+    if (sortBySelect) {
+      // Add default option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select a score...';
+      sortBySelect.appendChild(defaultOption);
+      
+      // Populate sorting options
+      const sortingOptions = [
+        { text: 'Environmental Score', value: 'EnvironmentalScore' },
+        { text: 'Economic Score', value: 'EconomicScore' },
+        { text: 'Social Score', value: 'SocialScore' },
+        { text: 'Triple Bottom Line Score', value: 'TripleBottomLineScore' }
+      ];
+
+      sortingOptions.forEach(option => {
+        const optionElement = document.createElement('option');
+        optionElement.value = option.value;
+        optionElement.textContent = option.text;
+        sortBySelect.appendChild(optionElement);
+      });
+
+      // Add event listener for sorting
+      sortBySelect.addEventListener('change', applySorting);
+    }
+  });
+  
+  setupTypeFilters();
+  setupEnvironmentalFilters();
+ 
+  // Close button for the comparison popup
+  const comparisonPopupClose = document.querySelector('.comparison-popup .close');
+  if (comparisonPopupClose) {
+    comparisonPopupClose.addEventListener('click', function() {
+      document.getElementById('comparison-popup').style.display = 'none';
+    });
+  }
+  
+  // Optionally, also close the popup when clicking outside of it
+  window.addEventListener('click', function(event) {
+    const comparisonPopup = document.getElementById('comparison-popup');
+    if (event.target === comparisonPopup) {
+      comparisonPopup.style.display = 'none';
+    }
+  });
+  
+  // Event listener for closing modal by clicking outside of it
+  window.addEventListener('click', event => {
+    if (event.target === document.getElementById('bmp-modal')) {
+      document.getElementById('bmp-modal').style.display = 'none';
+    }
+  });
+  
+// Event listener for opening the help popup
+const scoresHelpIcon = document.querySelector('.scores-help-icon');
+scoresHelpIcon.addEventListener('click', () => {
+  document.getElementById('help-popup').style.display = 'block';
+});
+
+// Event listener for closing the help popup
+const helpPopupClose = document.querySelector('.help-popup-close');
+helpPopupClose.addEventListener('click', () => {
+  document.getElementById('help-popup').style.display = 'none';
+});
+
+// Event listener for closing the help popup when clicking outside of it
+window.addEventListener('click', event => {
+  if (event.target === document.getElementById('help-popup')) {
+    document.getElementById('help-popup').style.display = 'none';
+  }
+});
+  
+  // Event listener for closing the help popup when clicking outside of it
+window.addEventListener('click', event => {
+  if (event.target === document.getElementById('help-popup')) {
+    document.getElementById('help-popup').style.display = 'none';
+  }
+});
+  
+  // Event listener for closing the modal when clicking outside of it
+window.addEventListener('click', event => {
+  if (event.target === document.getElementById('bmp-modal')) {
+    document.getElementById('bmp-modal').style.display = 'none';
+  }
+});
+  
+  // Event listener for closing modal with the close button
+  const closeButton = document.querySelector('.close');
+  closeButton.addEventListener('click', () => {
+    document.getElementById('bmp-modal').style.display = 'none';
+  });
+});
+</script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
